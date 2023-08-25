@@ -24,8 +24,8 @@ const storage = multer.diskStorage({
     cb(null, "uploads/image/"); // Directory where uploaded images will be stored locally
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, "event/" + uniqueSuffix + file.originalname); // File name with a unique suffix
+    const uniqueSuffix = Date.now() + "-";
+    cb(null, "hair/" + uniqueSuffix + file.originalname); // File name with a unique suffix
   },
 });
 
@@ -35,7 +35,6 @@ const multerFileUpload = multer({
 }).array("images");
 
 const upload = async (req, res) => {
-  
   const result = await multerFileUpload(req, res, (err) => {
     if (err) {
       console.log("Error:", err);
@@ -46,9 +45,9 @@ const upload = async (req, res) => {
       return res.status(400).json({ message: "Error: No File Selected" });
     }
 
-    const fileName = req.files.filename;
-    const filePath = req.files.path;
-    const originalFileName = req.files.originalname;
+    // const fileName = req.files.filename;
+    // const filePath = req.files.path;
+    // const originalFileName = req.files.originalname;
 
     let imageData = [];
     req.files.map((r, i) => {
@@ -62,7 +61,6 @@ const upload = async (req, res) => {
     return res.status(200).json(imageData);
   });
 };
-
 
 const getImage = async (req, res) => {
   const filePath = req.body.filePath;

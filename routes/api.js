@@ -4,7 +4,18 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const AuthController = require("../controllers/AuthController");
-const content = require("../controllers/content");
+const {
+  postContent,
+  getContent,
+  postEditContent,
+} = require("../controllers/content");
+const {
+  postHair,
+  getHair,
+  getAllHair,
+  postEditHair,
+  deleteHairPost,
+} = require("../controllers/Hair");
 const auth = require("../middlewares/auth");
 const { upload, getImage } = require("../controllers/AdminPanel/Files/image");
 const { authCheck } = require("../controllers/AdminPanel/authCheck");
@@ -58,6 +69,20 @@ router.get("/authtest", auth, function (req, res, next) {
   });
 });
 
-//post terms and privecy
-router.post("/add-content", content.postContent);
+// terms and privecy
+router.post("/add-content", postContent);
+router.post("/get-content", getContent);
+router.post("/edit-content", postEditContent);
+
+// Hair
+router.post("/add-hair", postHair);
+router.post("/get-all-hair", getAllHair);
+router.post("/get-hair/:id?", getHair);
+router.post("/edit-hair/:id?", postEditHair);
+router.post("/delete-hair/:id?", deleteHairPost);
+
+//file uploads
+router.post("/uploads/image", upload);
+router.post("/get/image", getImage);
+
 module.exports = router;
