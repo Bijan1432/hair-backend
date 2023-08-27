@@ -32,6 +32,10 @@ const UserSchema = new Schema(
       type: String,
       default: "app_user",
     },
+    varifiedCode: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

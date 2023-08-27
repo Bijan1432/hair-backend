@@ -8,6 +8,10 @@ const contentSchema = new Schema(
       type: String,
       default: null,
     },
+    title: {
+      type: String,
+      default: null,
+    },
     content: {
       type: String,
       default: null,

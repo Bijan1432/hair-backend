@@ -4,6 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const AuthController = require("../controllers/AuthController");
+const { forgetPassword } = require("../controllers/forgetPassword");
 const {
   postContent,
   getContent,
@@ -51,10 +52,15 @@ router.post(
   AuthController.updateUserPost
 );
 
-router.get("/users", auth, AuthController.users);
-router.get("/user/:id?", auth, AuthController.user);
+router.post("/check/auth", authCheck);
+
+router.get("/users", AuthController.users);
+router.get("/user/:id?", AuthController.user);
 
 router.post("/delete-user/:id?", AuthController.deleteUserPost);
+router.post("/veified-code/", AuthController.updateVerifyCode);
+router.post("/reset-password/", AuthController.resetPassword);
+router.post("/forgetPassword/", forgetPassword);
 router.post(
   "/login",
   body("email").not().isEmpty().trim().isEmail(),
@@ -76,7 +82,7 @@ router.post("/edit-content", postEditContent);
 
 // Hair
 router.post("/add-hair", postHair);
-router.post("/get-all-hair", getAllHair);
+router.get("/get-all-hair", getAllHair);
 router.post("/get-hair/:id?", getHair);
 router.post("/edit-hair/:id?", postEditHair);
 router.post("/delete-hair/:id?", deleteHairPost);

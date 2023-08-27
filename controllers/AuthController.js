@@ -120,6 +120,7 @@ module.exports = {
     //     });
     // });
   },
+  forgetPassword: async (req, res, next) => {},
   register: async (req, res, next) => {
     console.log(req.body);
     // Finds the validation errors in this request and wraps them in an object with handy functions
@@ -346,7 +347,6 @@ module.exports = {
       }
     }
   },
-
   deleteUserPost: async (req, res, next) => {
     const userId = req.params.id;
     if (!userId) {
@@ -381,6 +381,66 @@ module.exports = {
       return res
         .status(400)
         .json({ data: {}, success: false, message: err.message, errors: [] });
+    }
+  },
+  updateVerifyCode: async (req, res) => {
+    const email = req.body.email;
+    const code = req.body.code;
+
+    const result = await User.findOneAndUpdate(
+      {
+        email: email,
+      },
+      {
+        varifiedCode: code,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (result) {
+      return res.status(200).json(result);
+    } else {
+      return res.status(400).send({ message: "Oops! Something went wrong." });
+    }
+  },
+  resetPassword: async (req, res) => {
+    const email = req.body.email;
+    const code = req.body.code;
+    const password = req.body.password;
+
+    const result = await User.find({ email: email });
+    if (result[0].varifiedCode === code) {
+      bcrypt.hash(password, 10, async (err, hash) => {
+        if (err) {
+          return res.status(500).send({
+            msg: err,
+            data: null,
+            error: true,
+          });
+        } else {
+          // has hashed pw => add to database
+          let update = await User.findOneAndUpdate(
+            { email: email },
+            {
+              password: hash,
+              varifiedCode: "",
+            }
+          );
+
+          return res.status(200).json({ message: "Password Updated" });
+          if (update) {
+            return res.status(200).send({
+              msg: "Password is Updated!",
+              data: null,
+              error: false,
+            });
+          }
+        }
+      });
+    } else {
+      return res.status(400).json({ message: "Link Failure!!!" });
     }
   },
 };

@@ -7,6 +7,7 @@ const postContent = async (req, res) => {
   try {
     const result = await Content.create({
       type: data.type,
+      title: data.title,
       content: data.content,
     });
 
@@ -44,12 +45,14 @@ const getContent = async (req, res) => {
 const postEditContent = async (req, res) => {
   const type = req.body.type;
   const content = req.body.content;
+  const title = req.body.title;
 
   const result = await Content.findOneAndUpdate(
     {
       type: type,
     },
     {
+      title: title,
       content: content,
     },
     {
