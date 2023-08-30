@@ -57,25 +57,50 @@ const postEditHair = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
+  // First, push new images
   const result = await Hairs.findOneAndUpdate(
     {
       _id: id,
     },
     {
+      $push: {
+        images: {
+          $each: data.images, // This assumes that `data.images` is an array of new image data
+        },
+      },
       name: data.name,
-      images: data.images,
       status: data.status,
     },
     {
       new: true,
     }
   );
-  if (result) {
-    res.status(200).json(result);
-  } else {
-    res.status(400).json("Something!!! Went Wrong");
+
+  if (!result) {
+    res.status(400).json("Something went wrong while updating.");
+    return;
   }
+console.log(data.imagesToRemove)
+  // Then, remove images if there are any to remove
+  if (data.imagesToRemove && data.imagesToRemove.length > 0) {
+    const removeImage = await Hairs.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        $pull: {
+          images: { _id: { $in: data.imagesToRemove } }, // Remove images with specified IDs
+        },
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
+  res.status(200).json(result);
 };
+
 
 //hair delete
 const deleteHairPost = async (req, res, next) => {
