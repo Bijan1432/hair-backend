@@ -20,6 +20,7 @@ const {
 const auth = require("../middlewares/auth");
 const { upload, getImage } = require("../controllers/AdminPanel/Files/image");
 const { authCheck } = require("../controllers/AdminPanel/authCheck");
+const { searchUsers } = require("../controllers/AdminPanel/search");
 
 router.get("/", function (req, res, next) {
   return res.json({
@@ -90,5 +91,8 @@ router.post("/delete-hair/:id?", deleteHairPost);
 //file uploads
 router.post("/uploads/image", upload);
 router.post("/get/image", getImage);
+
+//search
+router.post("/search/users", searchUsers);
 
 module.exports = router;
