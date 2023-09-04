@@ -45,6 +45,7 @@ module.exports = {
     return res.status(200).json({
       data: {
         token,
+        userId: userData._id,
         email: userData.email,
         role: userData.role,
         name: userData.name,
