@@ -1,7 +1,7 @@
 const Hairs = require("../../models/Hair");
 const User = require("../../models/User");
 
-const searchUsers = async (req,res) => {
+const searchUsers = async (req, res) => {
   try {
     const { name } = req.body;
 
@@ -20,4 +20,25 @@ const searchUsers = async (req,res) => {
     res.status(400).json({ error: "Internal Server Error" });
   }
 };
-module.exports = { searchUsers };
+
+const searchHair = async (req, res) => {
+  try {
+    const { name } = req.body;
+    console.log(name);
+    const nameRegex = new RegExp(name, "i");
+    console.log(nameRegex);
+
+    const hair = await Hairs.find({ name: nameRegex });
+    if (hair) {
+      res.status(200).json({
+        data: { hair },
+        success: true,
+        message: "All Hair",
+        errors: [],
+      });
+    }
+  } catch (err) {
+    res.status(400).json({ error: "Internal Server Error" });
+  }
+};
+module.exports = { searchUsers, searchHair };

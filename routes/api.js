@@ -15,12 +15,12 @@ const {
   getHair,
   getAllHair,
   postEditHair,
-  deleteHairPost,
+  deleteHairPost
 } = require("../controllers/Hair");
 const auth = require("../middlewares/auth");
 const { upload, getImage } = require("../controllers/AdminPanel/Files/image");
 const { authCheck } = require("../controllers/AdminPanel/authCheck");
-const { searchUsers } = require("../controllers/AdminPanel/search");
+const { searchUsers, searchHair } = require("../controllers/AdminPanel/search");
 
 router.get("/", function (req, res, next) {
   return res.json({
@@ -87,6 +87,7 @@ router.get("/get-all-hair", getAllHair);
 router.post("/get-hair/:id?", getHair);
 router.post("/edit-hair/:id?", postEditHair);
 router.post("/delete-hair/:id?", deleteHairPost);
+router.post("/search-hair", searchHair);
 
 //file uploads
 router.post("/uploads/image", upload);
