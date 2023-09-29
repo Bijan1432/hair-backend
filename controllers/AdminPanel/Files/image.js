@@ -29,10 +29,25 @@ const storage = multer.diskStorage({
   },
 });
 
+const storageProfile = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/image/"); // Directory where uploaded images will be stored locally
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-";
+    cb(null, "users/" + uniqueSuffix + file.originalname); // File name with a unique suffix
+  },
+});
+
 const multerFileUpload = multer({
   storage: storage,
   fileFilter: filefilter,
 }).array("images");
+
+const multerFileUploadProfile = multer({
+  storage: storageProfile,
+  fileFilter: filefilter,
+}).single("imagesProfile");
 
 const upload = async (req, res) => {
   const result = await multerFileUpload(req, res, (err) => {
@@ -62,6 +77,32 @@ const upload = async (req, res) => {
   });
 };
 
+const uploadProfile = async (req, res) => {
+  const result = await multerFileUploadProfile(req, res, (err) => {
+    if (err) {
+      console.log("Error:", err);
+      return res.status(400).send(err.message);
+    }
+console.log("req.files=>",req)
+    // if (!req.files) {
+    //   return res.status(400).json({ message: "Error: No File Selected" });
+    // }
+
+    // const fileName = req.files.filename;
+    // const filePath = req.files.path;
+    // const originalFileName = req.files.originalname;
+
+    let imageData = {
+      fileName: req.file.filename.replace(/^product\//, ""),
+      filePath: req.file.path.replace(/\\/g, "/"),
+      originalFileName: req.file.originalname,
+    };
+
+
+    return res.status(200).json(imageData);
+  });
+};
+
 const getImage = async (req, res) => {
   const filePath = req.body.filePath;
 
@@ -79,4 +120,5 @@ const getImage = async (req, res) => {
 module.exports = {
   upload,
   getImage,
+  uploadProfile
 };

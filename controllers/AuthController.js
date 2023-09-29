@@ -147,6 +147,7 @@ module.exports = {
         status: req.body.status,
         password: hashedPassword,
         role: req.body.role ? req.body.role : "app-user",
+        image:req.body.image
       });
       user
         .save()
