@@ -41,6 +41,7 @@ module.exports = {
       "RANDOM-TOKEN",
       { expiresIn: "24h" }
     );
+    console.log(userData)
     //   return success response
     return res.status(200).json({
       data: {
@@ -49,6 +50,7 @@ module.exports = {
         email: userData.email,
         role: userData.role,
         name: userData.name,
+        image:userData.image
       },
       success: true,
       message: "Login Successful",
