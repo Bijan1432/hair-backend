@@ -57,17 +57,19 @@ const postEditHair = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
+  console.log("==>>",data);
   // First, push new images
   const result = await Hairs.findOneAndUpdate(
     {
       _id: id,
     },
     {
-      $push: {
-        images: {
-          $each: data.images, // This assumes that `data.images` is an array of new image data
-        },
-      },
+      // $push: {
+      //   images: {
+      //     $each: data.images, // This assumes that `data.images` is an array of new image data
+      //   },
+      // },
+      images:data.images,
       name: data.name,
       status: data.status,
     },
