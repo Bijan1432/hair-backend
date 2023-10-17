@@ -83,7 +83,7 @@ const uploadProfile = async (req, res) => {
       console.log("Error:", err);
       return res.status(400).send(err.message);
     }
-console.log("req.files=>",req)
+    console.log("req.files=>", req);
     // if (!req.files) {
     //   return res.status(400).json({ message: "Error: No File Selected" });
     // }
@@ -97,7 +97,6 @@ console.log("req.files=>",req)
       filePath: req.file.path.replace(/\\/g, "/"),
       originalFileName: req.file.originalname,
     };
-
 
     return res.status(200).json(imageData);
   });
@@ -120,5 +119,5 @@ const getImage = async (req, res) => {
 module.exports = {
   upload,
   getImage,
-  uploadProfile
+  uploadProfile,
 };
