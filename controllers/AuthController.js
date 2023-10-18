@@ -216,7 +216,7 @@ module.exports = {
     });
   },
   updateUserPost: async (req, res, next) => {
-    const { name, email, role, password, dob, status, gender } = req.body;
+    const { name, email, role, password, dob, status, gender,image } = req.body;
     var errorMessage = [];
     try {
       const errors = validationResult(req);
@@ -287,6 +287,7 @@ module.exports = {
               dob: dob,
               status: status,
               role: role ? role : "Admin",
+              image:image
             },
             {
               new: true,
