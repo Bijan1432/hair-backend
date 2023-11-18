@@ -39,6 +39,10 @@ const UserSchema = new Schema(
     image:{
       type:Array,
       default: null,
+    },
+    hairImage:{
+      type:Array,
+      default: null,
     }
   },
   { timestamps: true }

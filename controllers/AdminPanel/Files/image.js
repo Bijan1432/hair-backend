@@ -49,6 +49,11 @@ const multerFileUploadProfile = multer({
   fileFilter: filefilter,
 }).single("imagesProfile");
 
+const multerFileUploadHair = multer({
+  storage: storageProfile,
+  fileFilter: filefilter,
+}).single("hairImages");
+
 const upload = async (req, res) => {
   const result = await multerFileUpload(req, res, (err) => {
     if (err) {
@@ -79,6 +84,31 @@ const upload = async (req, res) => {
 
 const uploadProfile = async (req, res) => {
   const result = await multerFileUploadProfile(req, res, (err) => {
+    if (err) {
+      console.log("Error:", err);
+      return res.status(400).send(err.message);
+    }
+    console.log("req.files=>", req);
+    // if (!req.files) {
+    //   return res.status(400).json({ message: "Error: No File Selected" });
+    // }
+
+    // const fileName = req.files.filename;
+    // const filePath = req.files.path;
+    // const originalFileName = req.files.originalname;
+
+    let imageData = {
+      fileName: req.file.filename.replace(/^product\//, ""),
+      filePath: req.file.path.replace(/\\/g, "/"),
+      originalFileName: req.file.originalname,
+    };
+
+    return res.status(200).json(imageData);
+  });
+};
+
+const uploadProfileHair = async (req, res) => {
+  const result = await multerFileUploadHair(req, res, (err) => {
     if (err) {
       console.log("Error:", err);
       return res.status(400).send(err.message);
