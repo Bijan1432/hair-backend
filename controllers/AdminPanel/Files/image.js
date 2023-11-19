@@ -1,4 +1,6 @@
 const multer = require("multer");
+const User = require("../../../models/User");
+const { default: mongoose } = require("mongoose");
 const fs = require("fs").promises;
 
 const filefilter = (req, file, cb) => {
@@ -52,7 +54,7 @@ const multerFileUploadProfile = multer({
 const multerFileUploadHair = multer({
   storage: storageProfile,
   fileFilter: filefilter,
-}).single("hairImages");
+}).array("hairImages");
 
 const upload = async (req, res) => {
   const result = await multerFileUpload(req, res, (err) => {
@@ -88,7 +90,7 @@ const uploadProfile = async (req, res) => {
       console.log("Error:", err);
       return res.status(400).send(err.message);
     }
-console.log("req.files=>",req)
+    console.log("req.files=>", req);
     // if (!req.files) {
     //   return res.status(400).json({ message: "Error: No File Selected" });
     // }
@@ -102,19 +104,22 @@ console.log("req.files=>",req)
       filePath: req.file.path.replace(/\\/g, "/"),
       originalFileName: req.file.originalname,
     };
-
 
     return res.status(200).json(imageData);
   });
 };
 
 const uploadProfileHair = async (req, res) => {
-  const result = await multerFileUploadHair(req, res, (err) => {
+  const id = req.params.id;
+
+  console.log("id=>>", id);
+
+  const result = await multerFileUploadHair(req, res, async (err) => {
     if (err) {
       console.log("Error:", err);
       return res.status(400).send(err.message);
     }
-console.log("req.files=>",req)
+
     // if (!req.files) {
     //   return res.status(400).json({ message: "Error: No File Selected" });
     // }
@@ -123,14 +128,26 @@ console.log("req.files=>",req)
     // const filePath = req.files.path;
     // const originalFileName = req.files.originalname;
 
-    let imageData = {
-      fileName: req.file.filename.replace(/^product\//, ""),
-      filePath: req.file.path.replace(/\\/g, "/"),
-      originalFileName: req.file.originalname,
-    };
+    let imageDataArray = req.files.map((file) => ({
+      fileName: file.filename.replace(/^product\//, ""),
+      filePath: file.path.replace(/\\/g, "/"),
+      originalFileName: file.originalname,
+    }));
 
-
-    return res.status(200).json(imageData);
+    const findUser = await User.findById(id);
+    if (findUser) {
+      const updateUser = await User.findOneAndUpdate(
+        { _id: mongoose.Types.ObjectId(id) },
+        {
+          hairImage: imageDataArray,
+        }
+      )
+      if(updateUser){
+        return res.status(200).json("Update Successful");
+      }
+    } else {
+      return res.status(403).json("User Not Found");
+    }
   });
 };
 
@@ -152,5 +169,5 @@ module.exports = {
   upload,
   getImage,
   uploadProfile,
-  uploadProfileHair
+  uploadProfileHair,
 };

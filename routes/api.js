@@ -92,7 +92,9 @@ router.post("/search-hair", searchHair);
 //file uploads
 router.post("/uploads/image", upload);
 router.post("/uploads/imageProfile", uploadProfile);
-router.post("/uploads/imageHair", uploadProfileHair);
+
+router.post("/uploads/imageHair/:id?", uploadProfileHair);
+
 router.post("/get/image", getImage);
 
 //search
