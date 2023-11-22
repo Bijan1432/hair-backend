@@ -150,4 +150,5 @@ module.exports = {
   upload,
   getImage,
   uploadProfile,
+  uploadProfileHair,
 };

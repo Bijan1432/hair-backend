@@ -15,10 +15,15 @@ const {
   getHair,
   getAllHair,
   postEditHair,
-  deleteHairPost
+  deleteHairPost,
 } = require("../controllers/Hair");
 const auth = require("../middlewares/auth");
-const { upload, getImage, uploadProfile, uploadProfileHair } = require("../controllers/AdminPanel/Files/image");
+const {
+  upload,
+  getImage,
+  uploadProfile,
+  uploadProfileHair,
+} = require("../controllers/AdminPanel/Files/image");
 const { authCheck } = require("../controllers/AdminPanel/authCheck");
 const { searchUsers, searchHair } = require("../controllers/AdminPanel/search");
 
