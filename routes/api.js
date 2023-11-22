@@ -18,7 +18,7 @@ const {
   deleteHairPost
 } = require("../controllers/Hair");
 const auth = require("../middlewares/auth");
-const { upload, getImage, uploadProfile, uploadProfileHair } = require("../controllers/AdminPanel/Files/image");
+const { upload, getImage, uploadProfile, uploadProfileHair, deleteHairImage } = require("../controllers/AdminPanel/Files/image");
 const { authCheck } = require("../controllers/AdminPanel/authCheck");
 const { searchUsers, searchHair } = require("../controllers/AdminPanel/search");
 
@@ -94,6 +94,7 @@ router.post("/uploads/image", upload);
 router.post("/uploads/imageProfile", uploadProfile);
 
 router.post("/uploads/imageHair/:id?", uploadProfileHair);
+router.post("/uploads/delete-imageHair/:id?", deleteHairImage);
 
 router.post("/get/image", getImage);
 

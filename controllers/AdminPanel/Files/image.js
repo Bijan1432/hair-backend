@@ -112,7 +112,7 @@ const uploadProfile = async (req, res) => {
 const uploadProfileHair = async (req, res) => {
   const id = req.params.id;
 
-  console.log("id=>>", id);
+  console.log("id=>>", req);
 
   const result = await multerFileUploadHair(req, res, async (err) => {
     if (err) {
@@ -135,6 +135,9 @@ const uploadProfileHair = async (req, res) => {
     }));
 
     const findUser = await User.findById(id);
+
+    console.log(imageDataArray)
+
     if (findUser) {
       const updateUser = await User.findOneAndUpdate(
         { _id: mongoose.Types.ObjectId(id) },
@@ -150,6 +153,31 @@ const uploadProfileHair = async (req, res) => {
     }
   });
 };
+
+const deleteHairImage = async(req,res)=>{
+  try {
+    console.log("test");
+    const id = req.params.id;
+    const imageName = req.body.hairImageName
+
+    const filter = await User.findById(id);
+
+    const update = {
+      $pull: {
+        hairImage: { fileName: imageName }
+      }
+    };
+    const result = await User.updateOne({_id:mongoose.Types.ObjectId(id)}, update);
+
+    if(result){
+      return res.status(200).json("Update Successful");
+    }else{
+      return res.status(403).json("User Not Found");
+    }
+  } catch (error) {
+    return res.status(404).json(error);
+  }
+}
 
 const getImage = async (req, res) => {
   const filePath = req.body.filePath;
@@ -170,4 +198,5 @@ module.exports = {
   getImage,
   uploadProfile,
   uploadProfileHair,
+  deleteHairImage
 };
