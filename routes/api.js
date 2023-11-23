@@ -96,7 +96,7 @@ router.post("/uploads/imageProfile", uploadProfile);
 router.post("/uploads/imageHair/:id?", uploadProfileHair);
 router.post("/uploads/delete-imageHair/:id?", deleteHairImage);
 
-router.post("/get/image", getImage);
+router.post("/getimage/:filePath?", getImage);
 
 //search
 router.post("/search/users", searchUsers);

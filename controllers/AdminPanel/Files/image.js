@@ -180,19 +180,31 @@ const deleteHairImage = async(req,res)=>{
 }
 
 const getImage = async (req, res) => {
-  const filePath = req.body.filePath;
+  try {
+    const filePath = req.params.filePath;
 
-  fs.readFile(filePath)
-    .then((data) => {
+    // Read the file asynchronously
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.error("Error reading file:", err);
+        // Handle the error appropriately, such as sending an error response
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+
+      // Set a generic Content-Type header for any file type
+      res.setHeader("Content-Type", "application/octet-stream");
+
       // Send the file data in the response
-      res.setHeader("Content-Type", "image/png"); // Set the appropriate content type for your file
-      res.send(data);
-    })
-    .catch((err) => {
-      console.error("Error reading file:", err);
-      // Handle the error appropriately, such as sending an error response
+      res.end(data);
     });
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle other errors appropriately
+    res.status(500).send('Internal Server Error');
+  }
 };
+
 module.exports = {
   upload,
   getImage,
