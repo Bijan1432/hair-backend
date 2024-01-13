@@ -2,7 +2,7 @@ const multer = require("multer");
 const User = require("../../../models/User");
 const { default: mongoose } = require("mongoose");
 const fs = require("fs").promises;
-
+const base64Img = require("base64-img");
 const filefilter = (req, file, cb) => {
   if (
     file.mimetype === "image/jpeg" ||
@@ -79,6 +79,45 @@ const upload = async (req, res) => {
         originalFileName: r.originalname,
       });
     });
+
+    return res.status(200).json(imageData);
+  });
+};
+const saveBase64Locally = async (req, res) => {
+  const result = await multerFileUpload(req, res, async (err) => {
+    if (err) {
+      console.log("Error:", err);
+      return res.status(400).send(err.message);
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "Error: No File Selected" });
+    }
+
+    let imageData = [];
+    for (const file of req.files) {
+      const imagePath = file.path;
+      const base64Data = base64Img.base64Sync(imagePath);
+
+      try {
+        // Save the base64 data locally
+        base64Img.imgSync(base64Data, "uploads/image", file.filename);
+
+        imageData.push({
+          fileName: file.filename,
+          filePath: `uploads/image/${file.filename}`,
+          originalFileName: file.originalname,
+        });
+
+        // Delete the temporary image file asynchronously
+        await fs.unlink(imagePath);
+      } catch (error) {
+        console.error("Error saving base64 image locally:", error);
+        return res
+          .status(500)
+          .json({ success: false, error: "Internal Server Error" });
+      }
+    }
 
     return res.status(200).json(imageData);
   });
@@ -209,6 +248,7 @@ const getImage = async (req, res) => {
 
 module.exports = {
   upload,
+  saveBase64Locally,
   getImage,
   uploadProfile,
   uploadProfileHair,

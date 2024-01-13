@@ -1,4 +1,6 @@
+const { default: mongoose } = require("mongoose");
 const Hairs = require("../models/Hair");
+const UserHair = require("../models/UserHair");
 
 //Hair post
 const postHair = async (req, res) => {
@@ -22,6 +24,49 @@ const postHair = async (req, res) => {
     } else {
       return res.status(400).json(error);
     }
+  }
+};
+const userHairImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { imagedata } = req.body;
+
+    if (!id || !imagedata) {
+      return res
+        .status(400)
+        .json({ error: "User ID and image data are required" });
+    }
+
+    const userHairRecord = await UserHair.create({
+      userId: id,
+      imageData: imagedata,
+    });
+
+    return res.status(201).json({
+      message: "Hair image successfully uploaded",
+      data: userHairRecord,
+    });
+  } catch (error) {
+    console.error("Error in postUserHairImage:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+// get user iamges of hair
+const userHairImageGet = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    if (!id || id == undefined) {
+      return res.status(200).json("Id is not defined ");
+    }
+
+    const result = await UserHair.find({ userId: { $eq: id } });
+
+    if (result) {
+      return res.status(200).json(result);
+    }
+  } catch (error) {
+    return res.status(400).json(error);
   }
 };
 
@@ -57,7 +102,7 @@ const postEditHair = async (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  console.log("==>>",data);
+  console.log("==>>", data);
   // First, push new images
   const result = await Hairs.findOneAndUpdate(
     {
@@ -69,7 +114,7 @@ const postEditHair = async (req, res) => {
       //     $each: data.images, // This assumes that `data.images` is an array of new image data
       //   },
       // },
-      images:data.images,
+      images: data.images,
       name: data.name,
       status: data.status,
     },
@@ -82,7 +127,7 @@ const postEditHair = async (req, res) => {
     res.status(400).json("Something went wrong while updating.");
     return;
   }
-console.log(data.imagesToRemove)
+  console.log(data.imagesToRemove);
   // Then, remove images if there are any to remove
   if (data.imagesToRemove && data.imagesToRemove.length > 0) {
     const removeImage = await Hairs.findOneAndUpdate(
@@ -102,7 +147,6 @@ console.log(data.imagesToRemove)
 
   res.status(200).json(result);
 };
-
 
 //hair delete
 const deleteHairPost = async (req, res, next) => {
@@ -144,7 +188,9 @@ const deleteHairPost = async (req, res, next) => {
 
 module.exports = {
   getAllHair,
+  userHairImage,
   deleteHairPost,
+  userHairImageGet,
   postHair,
   getHair,
   postEditHair,

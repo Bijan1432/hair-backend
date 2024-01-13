@@ -16,10 +16,13 @@ const {
   getAllHair,
   postEditHair,
   deleteHairPost,
+  userHairImageGet,
+  userHairImage,
 } = require("../controllers/Hair");
 const auth = require("../middlewares/auth");
 const {
   upload,
+  saveBase64Locally,
   getImage,
   uploadProfile,
   uploadProfileHair,
@@ -97,7 +100,13 @@ router.post("/search-hair", searchHair);
 
 //file uploads
 router.post("/uploads/image", upload);
+router.post("/uploads/imageBase64", saveBase64Locally);
 router.post("/uploads/imageProfile", uploadProfile);
+
+//hair image save by user
+
+router.post("/uploads/user-hair-image/:id", userHairImage);
+router.get("/uploads/user-hair-image-get/:id", userHairImageGet);
 
 router.post("/uploads/imageHair/:id?", uploadProfileHair);
 router.post("/uploads/delete-imageHair/:id?", deleteHairImage);
