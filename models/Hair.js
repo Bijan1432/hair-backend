@@ -8,6 +8,18 @@ const hairSchema = new Schema(
       type: String,
       default: null,
     },
+    type: {
+      type: String,
+      default: null,
+    },
+    bangs: {
+      type: String,
+      default: null,
+    },
+    mode: {
+      type: String,
+      default: null,
+    },
     images: [
       {
         url: {

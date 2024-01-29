@@ -9,6 +9,9 @@ const postHair = async (req, res) => {
   try {
     const result = await Hairs.create({
       name: data.name,
+      mode: data.mode,
+      type: data.type,
+      bangs: data.bangs,
       images: data.images,
       status: data.status,
     });
@@ -116,6 +119,9 @@ const postEditHair = async (req, res) => {
       // },
       images: data.images,
       name: data.name,
+      mode: data.mode,
+      bangs: data.bangs,
+      type: data.type,
       status: data.status,
     },
     {
