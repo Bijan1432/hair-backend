@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Hairs = require("../models/Hair");
 const UserHair = require("../models/UserHair");
+const axios = require("axios");
 
 //Hair post
 const postHair = async (req, res) => {
@@ -192,11 +193,42 @@ const deleteHairPost = async (req, res, next) => {
   }
 };
 
+//hair change image get-------------------------------
+const hairChange = async (req, res, next) => {
+  try {
+    // Extract task_id from the request parameters
+    const task_id = req.params.id;
+
+    if (!task_id) {
+      return res.status(400).json({ error: "task_id is required" });
+    }
+
+    // Set up the API URL
+    const apiUrl = `https://www.ailabapi.com/api/common/query-async-task-result?task_id=${task_id}`;
+
+    // Set up headers, including the authorization header
+    const headers = {
+      "ailabapi-api-key":
+        "4VHj5fqTDzLd7Hs0biIUOGRW30jeRmwJ39upMYf2qkFhb7BCQLgsr85muXYFQkOo",
+    };
+
+    // Make the GET request to the API
+    const response = await axios.get(apiUrl, { headers });
+
+    // Send back the API response
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllHair,
   userHairImage,
   deleteHairPost,
   userHairImageGet,
+  hairChange,
   postHair,
   getHair,
   postEditHair,

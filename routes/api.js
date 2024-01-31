@@ -17,6 +17,7 @@ const {
   postEditHair,
   deleteHairPost,
   userHairImageGet,
+  hairChange,
   userHairImage,
 } = require("../controllers/Hair");
 const auth = require("../middlewares/auth");
@@ -115,5 +116,9 @@ router.post("/getimage/:filePath?", getImage);
 
 //search
 router.post("/search/users", searchUsers);
+
+//get image of hair-change
+
+router.get("/user-hair-change/:id", hairChange);
 
 module.exports = router;
